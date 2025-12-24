@@ -15,9 +15,6 @@ class FirearmGenerator:
         
         # Historical periods with appropriate firearm types
         self.period_types = {
-            "Early Firearms Era (1400-1600)": ["hand cannon", "matchlock musket", "arquebus"],
-            "Flintlock Era (1600-1840)": ["flintlock pistol", "flintlock musket", "blunderbuss"],
-            "Percussion Era (1840-1870)": ["percussion rifle", "percussion pistol", "muzzle-loading rifle"],
             "American Civil War Era (1860s)": ["rifle musket", "revolver", "carbine", "rifle"],
             "Wild West Era (1870-1900)": ["revolver", "lever-action rifle", "single-action pistol", "shotgun"],
             "World War I (1914-1918)": ["bolt-action rifle", "semi-automatic pistol", "machine gun", "submachine gun"],
@@ -120,9 +117,10 @@ Make sure the firearm is real, historically accurate, and actually existed durin
             params = {
                 'action': 'query',
                 'titles': title,
-                'prop': 'pageimages',
+                'prop': 'pageimages|imageinfo',
                 'format': 'json',
-                'pithumbsize': 1024
+                'piprop': 'original',
+                'iiprop': 'url'
             }
             
             response = requests.get(wiki_api_url, params=params, headers=self.headers, timeout=15)
@@ -134,8 +132,8 @@ Make sure the firearm is real, historically accurate, and actually existed durin
             pages = data.get('query', {}).get('pages', {})
             
             for page_id, page_data in pages.items():
-                if page_id != '-1' and 'thumbnail' in page_data:
-                    image_url = page_data['thumbnail']['source']
+                if page_id != '-1' and 'original' in page_data:
+                    image_url = page_data['original']['source']
                     print(f"  ✓ Found Wikipedia image for: {page_data.get('title', title)}")
                     return image_url
             
