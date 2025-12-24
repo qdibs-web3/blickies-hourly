@@ -54,7 +54,8 @@ class TwitterPoster:
         """Download image from URL and optionally save to disk"""
         try:
             print(f"Downloading image from: {image_url}")
-            response = requests.get(image_url, timeout=30)
+            headers = {'User-Agent': 'FirearmBot/1.0 (Educational Twitter Bot)'}
+            response = requests.get(image_url, headers=headers, timeout=30)
             response.raise_for_status()
             
             # Load image with PIL to ensure it's valid
